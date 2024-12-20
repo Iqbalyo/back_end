@@ -1,0 +1,35 @@
+const { where } = require("sequelize");
+const { absen_mahasiswas } = require("../models");
+
+const findAllabsen = async (req, res) => {
+    try {
+        const { id } = req.params
+        // Ambil 5 data saja dengan limit
+        const data = await absen_mahasiswas.findAll({
+            where: {
+                nim: id
+            },
+            limit: 10
+        });
+
+        // Periksa jika data kosong
+        if (data.length === 0) {
+            return res.status(404).json({
+                error: "Gak ada data user"
+            });
+        }
+
+        // Kirim data dalam response
+        res.json({
+            data: data
+        });
+    } catch (error) {
+        // Tangani error server
+        console.error("Error fetching data:", error);
+        res.status(500).json({
+            error: "Server error"
+        });
+    }
+};
+
+module.exports = { findAllabsen };
